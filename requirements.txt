@@ -1,0 +1,13 @@
+streamlit
+pandas
+plotly
+seaborn
+numpy
+datetime
+streamlit-option-menu
+streamlit-calendar
+matplotlib
+streamlit-extras
+hydralit_components
+streamlit-echarts
+streamlit-card

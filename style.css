@@ -1,0 +1,179 @@
+/* Global Styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+.main {
+    padding: 1rem;
+    max-width: 100%;
+}
+
+/* Modern Cards */
+.modern-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.modern-card:hover {
+    transform: translateY(-2px);
+}
+
+/* Metrics */
+.metric-container {
+    background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+    color: white;
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0.5rem 0;
+}
+
+.metric-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* Navigation */
+.nav-link {
+    border-radius: 10px;
+    margin: 0.2rem 0;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+    .main {
+        padding: 0.5rem;
+    }
+    
+    .modern-card {
+        padding: 1rem;
+        margin: 0.5rem 0;
+    }
+    
+    .metric-container {
+        padding: 0.8rem;
+    }
+}
+
+/* Custom Components */
+.notification-banner {
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 10px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.notification-warning {
+    background: linear-gradient(135deg, #FFD93D 0%, #FF9800 100%);
+    color: #000;
+}
+
+.notification-info {
+    background: linear-gradient(135deg, #4FC3F7 0%, #2196F3 100%);
+    color: white;
+}
+
+.notification-success {
+    background: linear-gradient(135deg, #66BB6A 0%, #43A047 100%);
+    color: white;
+}
+
+/* Charts and Analytics */
+.chart-container {
+    background: white;
+    border-radius: 15px;
+    padding: 1rem;
+    margin: 1rem 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Drone Service */
+.drone-map {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 500;
+    text-align: center;
+    min-width: 100px;
+}
+
+.status-active {
+    background: linear-gradient(135deg, #66BB6A 0%, #43A047 100%);
+    color: white;
+}
+
+.status-inactive {
+    background: linear-gradient(135deg, #EF5350 0%, #D32F2F 100%);
+    color: white;
+}
+
+.status-pending {
+    background: linear-gradient(135deg, #FFB74D 0%, #FF9800 100%);
+    color: white;
+}
+
+/* Progress Indicators */
+.progress-step {
+    background: #f5f5f5;
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.progress-step.active {
+    background: linear-gradient(135deg, #4FC3F7 0%, #2196F3 100%);
+    color: white;
+}
+
+/* Custom Buttons */
+.custom-button {
+    background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.custom-button:hover {
+    transform: translateY(-2px);
+}
+
+/* Form Elements */
+.custom-input {
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 0.8rem;
+    width: 100%;
+    transition: border-color 0.2s ease;
+}
+
+.custom-input:focus {
+    border-color: #6B73FF;
+    outline: none;
+}
