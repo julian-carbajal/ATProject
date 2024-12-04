@@ -178,105 +178,78 @@
     outline: none;
 }
 
-/* House Layout */
+/* Drone Service Layout */
+.status-container {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
 .house-layout {
-    max-width: 800px;
-    margin: 30px auto;
-    background: #ffffff;
+    background: white;
     border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .floor {
-    background: #f8f9fa;
-    border-radius: 12px;
-    padding: 25px;
-    margin-bottom: 25px;
-    border: 1px solid #e9ecef;
+    margin: 20px 0;
 }
 
 .floor h3 {
     text-align: center;
-    color: #2c3e50;
     margin-bottom: 20px;
-    font-size: 1.4rem;
+    color: #333;
 }
 
 .rooms {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
-    padding: 10px;
+    padding: 20px;
 }
 
 .room {
-    background: white;
+    background: #f8f9fa;
     border-radius: 10px;
-    padding: 15px;
+    padding: 20px;
     text-align: center;
     position: relative;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
 }
 
 .room:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .room h4 {
-    margin: 0;
+    margin-bottom: 15px;
     color: #2c3e50;
-    font-size: 1.1rem;
-    margin-bottom: 10px;
 }
 
 .room-icon {
-    font-size: 2rem;
+    font-size: 2.5em;
     margin: 10px 0;
 }
 
 .drone {
     position: absolute;
-    top: -10px;
-    right: -10px;
-    font-size: 1.5rem;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5em;
     animation: hover 2s ease-in-out infinite;
 }
 
 @keyframes hover {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-5px); }
-}
-
-.status-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.status-card {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.status-card h3 {
-    margin: 0;
-    color: #2c3e50;
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-}
-
-.status-text {
-    font-size: 1.1rem;
-    color: #4CAF50;
-    font-weight: 500;
-    margin: 0;
 }
 
 /* Status Cards */
