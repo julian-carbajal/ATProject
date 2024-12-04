@@ -570,60 +570,58 @@ elif selected == "Schedule":
 elif selected == "Drone Service":
     st.title("🚁 Medication Delivery Drone")
     
-    # Drone Status
-    st.markdown("### Current Status")
-    status_col1, status_col2 = st.columns(2)
+    # Current Status Section with better styling
+    st.markdown("""
+        <div class='status-container'>
+            <div class='status-card'>
+                <h3>🛸 Drone Status</h3>
+                <p class='status-text'>Available</p>
+            </div>
+            <div class='status-card'>
+                <h3>📍 Current Location</h3>
+                <p class='status-text'>Kitchen</p>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
     
-    with status_col1:
-        st.info(f"Drone Status: {st.session_state.drone_status}")
-    with status_col2:
-        st.info(f"Current Location: {st.session_state.drone_location}")
-    
-    # House Layout
+    # House Layout Section
     st.markdown("### 🏠 House Layout")
     
-    # Create a simple house layout visualization
-    fig = go.Figure()
-    
-    # Add rooms as rectangles
-    fig.add_shape(type="rect", x0=0, y0=0, x1=2, y1=2, name="Kitchen",
-                 line=dict(color="RoyalBlue"), fillcolor="LightSkyBlue", opacity=0.7)
-    fig.add_shape(type="rect", x0=3, y0=0, x1=5, y1=2, name="Bedroom",
-                 line=dict(color="RoyalBlue"), fillcolor="LightSkyBlue", opacity=0.7)
-    
-    # Add room labels
-    fig.add_annotation(x=1, y=1, text="Kitchen", showarrow=False)
-    fig.add_annotation(x=4, y=1, text="Bedroom", showarrow=False)
-    
-    # Add drone path
-    fig.add_trace(go.Scatter(x=[1, 4], y=[1, 1], mode="lines+markers",
-                            line=dict(color="red", dash="dash"), name="Drone Path"))
-    
-    # Update layout
-    fig.update_layout(
-        showlegend=False,
-        xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-        yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-        width=600,
-        height=300,
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-    )
-    
-    st.plotly_chart(fig)
+    # Create the house layout with animation
+    st.markdown("""
+        <div class='house-layout'>
+            <div class='room kitchen'>
+                <h4>Kitchen</h4>
+                <div class='drone' id='drone'>🚁</div>
+            </div>
+            <div class='path-container'>
+                <div class='path'></div>
+                <div class='path-arrow'>→</div>
+            </div>
+            <div class='room bedroom'>
+                <h4>Bedroom</h4>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
     
     # Drone Controls
     st.markdown("### 🎮 Drone Controls")
     
-    if st.session_state.drone_status == 'Available':
-        if st.button("Start Delivery", use_container_width=True):
-            st.session_state.drone_status = 'In Transit'
-            st.session_state.drone_location = 'In Transit to Bedroom'
-            st.success("Drone is delivering medications from Kitchen to Bedroom!")
-            st.experimental_rerun()
-    else:
-        if st.button("Reset Drone", use_container_width=True):
-            st.session_state.drone_status = 'Available'
-            st.session_state.drone_location = 'Kitchen'
-            st.info("Drone has been reset and is ready for the next delivery.")
-            st.experimental_rerun()
+    # Add a start delivery button with custom styling
+    if st.button("Start Delivery", key="start_delivery", help="Click to start drone delivery"):
+        st.markdown("""
+            <script>
+                const drone = document.getElementById('drone');
+                drone.classList.add('flying');
+            </script>
+            """, unsafe_allow_html=True)
+        
+        # Simulate drone movement
+        progress_text = "🚁 Drone is delivering medications..."
+        progress_bar = st.progress(0)
+        
+        for i in range(100):
+            time.sleep(0.02)
+            progress_bar.progress(i + 1)
+        
+        st.success("✅ Delivery completed! Medications have been delivered to the bedroom.")

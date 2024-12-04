@@ -177,3 +177,173 @@
     border-color: #6B73FF;
     outline: none;
 }
+
+/* Status Cards */
+.status-container {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.status-card {
+    background: linear-gradient(145deg, #ffffff, #f0f0f0);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+    flex: 1;
+    transition: transform 0.3s ease;
+}
+
+.status-card:hover {
+    transform: translateY(-5px);
+}
+
+.status-card h3 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+.status-text {
+    color: #3498db;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+/* House Layout */
+.house-layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin: 40px 0;
+    padding: 20px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.room {
+    background: linear-gradient(145deg, #e3f2fd, #bbdefb);
+    border-radius: 15px;
+    padding: 30px;
+    width: 200px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.room h4 {
+    color: #1976d2;
+    margin-bottom: 10px;
+}
+
+.path-container {
+    flex: 1;
+    height: 5px;
+    position: relative;
+    max-width: 200px;
+}
+
+.path {
+    height: 100%;
+    background: linear-gradient(90deg, #e74c3c 50%, #3498db 50%);
+    background-size: 20px 100%;
+    animation: moveStripes 1s linear infinite;
+}
+
+.path-arrow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #2c3e50;
+    font-size: 24px;
+    animation: bounce 1s ease-in-out infinite;
+}
+
+.drone {
+    font-size: 24px;
+    position: absolute;
+    transition: all 0.5s ease;
+}
+
+.drone.flying {
+    animation: fly 2s forwards;
+}
+
+/* Animations */
+@keyframes moveStripes {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 20px 0;
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translate(-50%, -50%);
+    }
+    50% {
+        transform: translate(-50%, -60%);
+    }
+}
+
+@keyframes fly {
+    0% {
+        transform: translateX(0) rotate(0deg);
+    }
+    50% {
+        transform: translateX(200px) rotate(10deg);
+    }
+    100% {
+        transform: translateX(400px) rotate(0deg);
+    }
+}
+
+/* Button Styling */
+.stButton > button {
+    background: linear-gradient(145deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.stButton > button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+/* Progress Bar */
+.stProgress > div > div {
+    background-color: #3498db;
+}
+
+/* Success Message */
+.stSuccess {
+    background: linear-gradient(145deg, #2ecc71, #27ae60);
+    color: white;
+    border-radius: 10px;
+    padding: 16px;
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
