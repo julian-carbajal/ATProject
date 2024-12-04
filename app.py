@@ -1,23 +1,20 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 import plotly.graph_objects as go
+import plotly.express as px
 from datetime import datetime, timedelta
-import json
+import random
 from streamlit_option_menu import option_menu
 from streamlit_calendar import calendar
-import random
-import seaborn as sns
-import numpy as np
 from streamlit_extras.colored_header import colored_header
 from streamlit_extras.metric_cards import style_metric_cards
 import matplotlib.pyplot as plt
-from hydralit_components import hc
+import hydralit_components as hc
 from streamlit_card import card
 
 # Set page config
 st.set_page_config(
-    page_title="MedTracker Pro",
+    page_title="TB MedTracker",
     page_icon="💊",
     layout="wide",
     initial_sidebar_state="expanded"
