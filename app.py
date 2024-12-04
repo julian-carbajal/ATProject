@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
 from datetime import datetime, timedelta
+import time
 import random
 from streamlit_option_menu import option_menu
 from streamlit_calendar import calendar
@@ -587,19 +588,59 @@ elif selected == "Drone Service":
     # House Layout Section
     st.markdown("### 🏠 House Layout")
     
-    # Create the house layout with animation
+    # Create a detailed house layout with multiple rooms and levels
     st.markdown("""
-        <div class='house-layout'>
-            <div class='room kitchen'>
-                <h4>Kitchen</h4>
-                <div class='drone' id='drone'>🚁</div>
+        <div class='house-container'>
+            <!-- Second Floor -->
+            <div class='floor second-floor'>
+                <h4>Second Floor</h4>
+                <div class='floor-layout'>
+                    <div class='room master-bedroom'>
+                        <h5>Master Bedroom</h5>
+                        <span class='room-icon'>🛏️</span>
+                    </div>
+                    <div class='room bedroom-2'>
+                        <h5>Bedroom 2</h5>
+                        <span class='room-icon'>🛏️</span>
+                    </div>
+                    <div class='room bedroom-3'>
+                        <h5>Bedroom 3</h5>
+                        <span class='room-icon'>🛏️</span>
+                    </div>
+                    <div class='room bathroom-2'>
+                        <h5>Bathroom</h5>
+                        <span class='room-icon'>🚽</span>
+                    </div>
+                </div>
             </div>
-            <div class='path-container'>
-                <div class='path'></div>
-                <div class='path-arrow'>→</div>
+            
+            <!-- First Floor -->
+            <div class='floor first-floor'>
+                <h4>First Floor</h4>
+                <div class='floor-layout'>
+                    <div class='room living-room'>
+                        <h5>Living Room</h5>
+                        <span class='room-icon'>🛋️</span>
+                    </div>
+                    <div class='room kitchen'>
+                        <h5>Kitchen</h5>
+                        <span class='room-icon'>🍳</span>
+                        <div class='drone' id='drone'>🚁</div>
+                    </div>
+                    <div class='room dining-room'>
+                        <h5>Dining Room</h5>
+                        <span class='room-icon'>🍽️</span>
+                    </div>
+                    <div class='room bathroom-1'>
+                        <h5>Bathroom</h5>
+                        <span class='room-icon'>🚽</span>
+                    </div>
+                </div>
             </div>
-            <div class='room bedroom'>
-                <h4>Bedroom</h4>
+            
+            <!-- Stairs -->
+            <div class='stairs'>
+                <span class='stairs-icon'>↗️</span>
             </div>
         </div>
     """, unsafe_allow_html=True)
@@ -607,21 +648,42 @@ elif selected == "Drone Service":
     # Drone Controls
     st.markdown("### 🎮 Drone Controls")
     
-    # Add a start delivery button with custom styling
+    # Create columns for destination selection and actions
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        destination = st.selectbox(
+            "Select Destination",
+            ["Master Bedroom", "Bedroom 2", "Bedroom 3", "Living Room", "Kitchen", "Dining Room"]
+        )
+    
+    with col2:
+        delivery_type = st.selectbox(
+            "Delivery Type",
+            ["Regular Delivery", "Express Delivery", "Scheduled Delivery"]
+        )
+    
+    # Additional options
+    st.markdown("#### Advanced Settings")
+    col3, col4, col5 = st.columns(3)
+    
+    with col3:
+        st.checkbox("Avoid Stairs", value=True, help="Route drone to avoid stairs when possible")
+    with col4:
+        st.checkbox("Silent Mode", help="Reduce drone noise during delivery")
+    with col5:
+        st.checkbox("Return to Base", value=True, help="Return to kitchen after delivery")
+    
+    # Start Delivery Button
     if st.button("Start Delivery", key="start_delivery", help="Click to start drone delivery"):
-        st.markdown("""
-            <script>
-                const drone = document.getElementById('drone');
-                drone.classList.add('flying');
-            </script>
-            """, unsafe_allow_html=True)
-        
-        # Simulate drone movement
-        progress_text = "🚁 Drone is delivering medications..."
-        progress_bar = st.progress(0)
-        
-        for i in range(100):
-            time.sleep(0.02)
-            progress_bar.progress(i + 1)
-        
-        st.success("✅ Delivery completed! Medications have been delivered to the bedroom.")
+        with st.spinner("🚁 Initializing drone delivery..."):
+            progress_bar = st.progress(0)
+            for i in range(100):
+                progress_bar.progress(i + 1)
+                time.sleep(0.02)
+            st.success(f"✅ Delivery completed! Medications have been delivered to {destination}.")
+            
+            if st.session_state.get("return_to_base", True):
+                with st.spinner("🔄 Returning to kitchen..."):
+                    time.sleep(1)
+                    st.info("🏠 Drone has returned to base.")
