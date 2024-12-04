@@ -585,37 +585,9 @@ elif selected == "Drone Service":
         </div>
         
         <div class='house-layout'>
-            <!-- Second Floor -->
+            <!-- House Layout -->
             <div class='floor'>
-                <h3>Second Floor</h3>
-                <div class='rooms'>
-                    <div class='room'>
-                        <h4>Master Bedroom</h4>
-                        <div class='room-icon'>🛏️</div>
-                    </div>
-                    <div class='room'>
-                        <h4>Bedroom 2</h4>
-                        <div class='room-icon'>🛏️</div>
-                    </div>
-                    <div class='room'>
-                        <h4>Bedroom 3</h4>
-                        <div class='room-icon'>🛏️</div>
-                    </div>
-                    <div class='room'>
-                        <h4>Bathroom</h4>
-                        <div class='room-icon'>🚽</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Stairs -->
-            <div class='stairs'>
-                <div class='stairs-icon'>↗️</div>
-            </div>
-            
-            <!-- First Floor -->
-            <div class='floor'>
-                <h3>First Floor</h3>
+                <h3>House Layout</h3>
                 <div class='rooms'>
                     <div class='room'>
                         <h4>Living Room</h4>
@@ -627,8 +599,8 @@ elif selected == "Drone Service":
                         <div class='drone'>🚁</div>
                     </div>
                     <div class='room'>
-                        <h4>Dining Room</h4>
-                        <div class='room-icon'>🍽️</div>
+                        <h4>Bedroom</h4>
+                        <div class='room-icon'>🛏️</div>
                     </div>
                     <div class='room'>
                         <h4>Bathroom</h4>
@@ -648,13 +620,7 @@ elif selected == "Drone Service":
     with col1:
         destination = st.selectbox(
             "Select Destination",
-            ["Master Bedroom", "Bedroom 2", "Bedroom 3", "Living Room", "Kitchen", "Dining Room"]
-        )
-    
-    with col2:
-        delivery_type = st.selectbox(
-            "Delivery Type",
-            ["Regular Delivery", "Express Delivery", "Scheduled Delivery"]
+            ["Living Room", "Kitchen", "Bedroom", "Bathroom"]
         )
     
     # Additional options
