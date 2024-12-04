@@ -12,8 +12,7 @@ import numpy as np
 from streamlit_extras.colored_header import colored_header
 from streamlit_extras.metric_cards import style_metric_cards
 import matplotlib.pyplot as plt
-from streamlit_echarts import st_echarts
-import hydralit_components as hc
+from hydralit_components import hc
 from streamlit_card import card
 
 # Set page config
@@ -128,10 +127,13 @@ if 'personal_info' not in st.session_state:
 if 'drone_status' not in st.session_state:
     st.session_state.drone_status = 'Available'
 
+if 'drone_location' not in st.session_state:
+    st.session_state.drone_location = 'Kitchen'
+
 if 'notifications' not in st.session_state:
     st.session_state.notifications = [
-        {'type': 'warning', 'message': 'Aspirin supply running low. Consider refill.'},
-        {'type': 'info', 'message': 'New feature: Medication interaction checker now available!'},
+        {'type': 'warning', 'message': 'Isoniazid (INH) stock is running low. Consider refilling soon.'},
+        {'type': 'info', 'message': 'Drone is ready to deliver medications from kitchen to bedroom.'},
         {'type': 'success', 'message': 'Perfect medication adherence streak: 7 days!'}
     ]
 
@@ -318,20 +320,9 @@ if selected == "Dashboard":
 elif selected == "Analytics":
     st.title("📈 Advanced Analytics")
     
-    # Time period selector with modern tabs
-    time_options = [
-        {'label': "Last 7 Days", 'icon': "calendar"},
-        {'label': "Last 30 Days", 'icon': "calendar"},
-        {'label': "Last 6 Months", 'icon': "calendar"}
-    ]
-    
-    time_period = hc.option_bar(
-        option_definition=time_options,
-        title='Select Time Period',
-        key='time_period',
-        override_theme={'txc_inactive': '#777'},
-        horizontal_orientation=True
-    )
+    # Time period selector with tabs
+    time_options = ["Last 7 Days", "Last 30 Days", "Last 6 Months"]
+    time_period = st.radio("Select Time Period", time_options, horizontal=True)
     
     if time_period == "Last 7 Days":
         date_filter = datetime.now().date() - timedelta(days=7)
@@ -340,101 +331,95 @@ elif selected == "Analytics":
     else:
         date_filter = datetime.now().date() - timedelta(days=180)
     
+    # Sample data generation for analytics
+    if len(st.session_state.doses_log) == 0:
+        # Generate sample data if no real data exists
+        dates = pd.date_range(date_filter, datetime.now().date(), freq='D')
+        sample_data = []
+        for date in dates:
+            for med in st.session_state.medications:
+                status = random.choices(['Taken', 'Missed', 'Delayed'], weights=[0.85, 0.1, 0.05])[0]
+                hour = random.randint(6, 22)
+                sample_data.append({
+                    'date': date.strftime('%Y-%m-%d'),
+                    'medication': med['name'],
+                    'status': status,
+                    'time': f"{hour:02d}:00"
+                })
+        st.session_state.doses_log = sample_data
+    
     # Convert data for analysis
     df_doses = pd.DataFrame(st.session_state.doses_log)
     df_doses['date'] = pd.to_datetime(df_doses['date'])
     df_filtered = df_doses[df_doses['date'].dt.date > date_filter]
     
-    # Advanced Analytics Sections
-    tab1, tab2, tab3 = st.tabs(["Adherence Analytics", "Time Patterns", "Medication Insights"])
+    # Analytics Sections
+    tab1, tab2 = st.tabs(["Adherence Analytics", "Medication Insights"])
     
     with tab1:
         # Adherence Trend
         st.markdown("### 📈 Adherence Trend")
         daily_adherence = df_filtered.groupby(['date', 'status']).size().unstack(fill_value=0)
-        daily_adherence['adherence_rate'] = daily_adherence['Taken'] / daily_adherence.sum(axis=1) * 100
+        if 'Taken' in daily_adherence.columns:
+            daily_adherence['adherence_rate'] = daily_adherence['Taken'] / daily_adherence.sum(axis=1) * 100
+            
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(
+                x=daily_adherence.index,
+                y=daily_adherence['adherence_rate'],
+                mode='lines+markers',
+                name='Adherence Rate',
+                line=dict(color='#2ecc71', width=2),
+                fill='tozeroy'
+            ))
+            fig.update_layout(
+                title='Daily Medication Adherence',
+                xaxis_title='Date',
+                yaxis_title='Adherence Rate (%)',
+                hovermode='x unified',
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+            )
+            st.plotly_chart(fig, use_container_width=True)
         
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(
-            x=daily_adherence.index,
-            y=daily_adherence['adherence_rate'],
-            mode='lines+markers',
-            name='Adherence Rate',
-            line=dict(color='#2ecc71', width=2),
-            fill='tozeroy'
-        ))
-        fig.update_layout(
-            title='Daily Medication Adherence',
-            xaxis_title='Date',
-            yaxis_title='Adherence Rate (%)',
-            hovermode='x unified',
+        # Time of Day Analysis
+        st.markdown("### ⏰ Time of Day Analysis")
+        df_filtered['hour'] = pd.to_datetime(df_filtered['time']).dt.hour
+        hourly_doses = df_filtered[df_filtered['status'] == 'Taken'].groupby('hour').size()
+        
+        fig_time = go.Figure(data=[
+            go.Bar(
+                x=hourly_doses.index,
+                y=hourly_doses.values,
+                marker_color='#3498db'
+            )
+        ])
+        fig_time.update_layout(
+            title='Preferred Medication Times',
+            xaxis_title='Hour of Day',
+            yaxis_title='Number of Doses',
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig_time, use_container_width=True)
     
     with tab2:
-        # Time Pattern Analysis
-        st.markdown("### 🕒 Time Patterns")
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            # Heatmap of medication times
-            df_filtered['hour'] = df_filtered['date'].dt.hour
-            df_filtered['day'] = df_filtered['date'].dt.day_name()
-            
-            pivot_data = df_filtered.pivot_table(
-                values='status',
-                index='day',
-                columns='hour',
-                aggfunc='count',
-                fill_value=0
-            )
-            
-            fig_heatmap = px.imshow(
-                pivot_data,
-                color_continuous_scale='Viridis',
-                title='Medication Time Patterns',
-                labels={'x': 'Hour of Day', 'y': 'Day of Week', 'color': 'Doses'}
-            )
-            st.plotly_chart(fig_heatmap, use_container_width=True)
-        
-        with col2:
-            # Radar chart of daily patterns
-            daily_counts = df_filtered.groupby('day').size()
-            
-            radar_data = {
-                'title': {
-                    'text': 'Daily Medication Pattern'
-                },
-                'radar': {
-                    'indicator': [{'name': day, 'max': daily_counts.max()} for day in daily_counts.index]
-                },
-                'series': [{
-                    'type': 'radar',
-                    'data': [{'value': daily_counts.values.tolist()}],
-                    'areaStyle': {'opacity': 0.3}
-                }]
-            }
-            st_echarts(options=radar_data, height="400px")
-    
-    with tab3:
         # Medication-specific insights
         st.markdown("### 💊 Medication Insights")
         
         # Medication adherence comparison
-        med_adherence = df_filtered.groupby('medication')['status'].value_counts().unstack()
+        med_adherence = df_filtered.groupby('medication')['status'].value_counts().unstack(fill_value=0)
         med_adherence_pct = med_adherence.div(med_adherence.sum(axis=1), axis=0) * 100
         
         fig_med = go.Figure()
         for status in ['Taken', 'Delayed', 'Missed']:
-            fig_med.add_trace(go.Bar(
-                name=status,
-                x=med_adherence_pct.index,
-                y=med_adherence_pct[status],
-                marker_color='#2ecc71' if status == 'Taken' else '#f1c40f' if status == 'Delayed' else '#e74c3c'
-            ))
+            if status in med_adherence_pct.columns:
+                fig_med.add_trace(go.Bar(
+                    name=status,
+                    x=med_adherence_pct.index,
+                    y=med_adherence_pct[status],
+                    marker_color='#2ecc71' if status == 'Taken' else '#f1c40f' if status == 'Delayed' else '#e74c3c'
+                ))
         
         fig_med.update_layout(
             barmode='stack',
@@ -445,7 +430,6 @@ elif selected == "Analytics":
         )
         st.plotly_chart(fig_med, use_container_width=True)
 
-# Personal Information
 elif selected == "Personal Info":
     st.title("👤 Personal Information")
     
@@ -462,7 +446,6 @@ elif selected == "Personal Info":
         if st.form_submit_button("Save Information"):
             st.success("Personal information updated successfully!")
 
-# Medications Management
 elif selected == "Medications":
     st.title("💊 Medications Management")
     
@@ -519,7 +502,6 @@ elif selected == "Medications":
                 })
                 st.success("Dose logged successfully!")
 
-# Schedule and Calendar
 elif selected == "Schedule":
     st.title("📅 Schedule and Reminders")
     
@@ -554,153 +536,63 @@ elif selected == "Schedule":
     
     calendar(events=calendar_events)
 
-# Drone Service
 elif selected == "Drone Service":
-    st.title("🚁 Drone Delivery Service")
+    st.title("🚁 Medication Delivery Drone")
     
-    # House layout data
-    walls = [
-        # Outer walls
-        dict(type='rect', x0=0, y0=0, x1=100, y1=80, line=dict(color='black', width=2), fillcolor='white'),
-        # Living room
-        dict(type='rect', x0=5, y0=5, x1=45, y1=40, line=dict(color='gray', width=1), fillcolor='rgba(200,200,200,0.1)'),
-        # Kitchen
-        dict(type='rect', x0=50, y0=5, x1=95, y1=40, line=dict(color='gray', width=1), fillcolor='rgba(200,200,200,0.1)'),
-        # Bathroom
-        dict(type='rect', x0=70, y0=45, x1=95, y1=75, line=dict(color='gray', width=1), fillcolor='rgba(173,216,230,0.2)'),
-        # Bedroom
-        dict(type='rect', x0=5, y0=45, x1=65, y1=75, line=dict(color='gray', width=1), fillcolor='rgba(200,200,200,0.1)'),
-    ]
-
-    # Room labels
-    annotations = [
-        dict(x=25, y=22.5, text='Living Room', showarrow=False),
-        dict(x=72.5, y=22.5, text='Kitchen', showarrow=False),
-        dict(x=82.5, y=60, text='Bathroom', showarrow=False),
-        dict(x=35, y=60, text='Bedroom', showarrow=False),
-    ]
-
-    # Create the base layout
+    # Drone Status
+    st.markdown("### Current Status")
+    status_col1, status_col2 = st.columns(2)
+    
+    with status_col1:
+        st.info(f"Drone Status: {st.session_state.drone_status}")
+    with status_col2:
+        st.info(f"Current Location: {st.session_state.drone_location}")
+    
+    # House Layout
+    st.markdown("### 🏠 House Layout")
+    
+    # Create a simple house layout visualization
     fig = go.Figure()
-
-    # Add walls and rooms
-    for wall in walls:
-        fig.add_shape(wall)
-
+    
+    # Add rooms as rectangles
+    fig.add_shape(type="rect", x0=0, y0=0, x1=2, y1=2, name="Kitchen",
+                 line=dict(color="RoyalBlue"), fillcolor="LightSkyBlue", opacity=0.7)
+    fig.add_shape(type="rect", x0=3, y0=0, x1=5, y1=2, name="Bedroom",
+                 line=dict(color="RoyalBlue"), fillcolor="LightSkyBlue", opacity=0.7)
+    
     # Add room labels
-    for annotation in annotations:
-        fig.add_annotation(annotation)
-
-    # Drone path coordinates
-    if st.session_state.drone_status == 'In Transit':
-        # Entry point (kitchen window)
-        entry_point = (95, 20)
-        # Bathroom medicine cabinet
-        target_point = (82, 60)
-        
-        # Calculate intermediate points for smooth path
-        path_x = [entry_point[0]]
-        path_y = [entry_point[1]]
-        
-        # Add points to create a curved path
-        path_x.extend([90, 85, 82])
-        path_y.extend([30, 45, 60])
-
-        # Add drone path
-        fig.add_trace(go.Scatter(
-            x=path_x,
-            y=path_y,
-            mode='lines',
-            line=dict(color='red', width=2, dash='dash'),
-            name='Drone Path'
-        ))
-
-        # Add drone marker
-        fig.add_trace(go.Scatter(
-            x=[path_x[-1]],
-            y=[path_y[-1]],
-            mode='markers',
-            marker=dict(symbol='hexagon', size=15, color='red'),
-            name='Drone'
-        ))
-
-        # Add start and end markers
-        fig.add_trace(go.Scatter(
-            x=[entry_point[0]],
-            y=[entry_point[1]],
-            mode='markers+text',
-            marker=dict(symbol='star', size=12, color='green'),
-            text=['Entry'],
-            textposition='top center',
-            name='Entry Point'
-        ))
-        
-        fig.add_trace(go.Scatter(
-            x=[target_point[0]],
-            y=[target_point[1]],
-            mode='markers+text',
-            marker=dict(symbol='star', size=12, color='blue'),
-            text=['Target'],
-            textposition='top center',
-            name='Medicine Cabinet'
-        ))
-
+    fig.add_annotation(x=1, y=1, text="Kitchen", showarrow=False)
+    fig.add_annotation(x=4, y=1, text="Bedroom", showarrow=False)
+    
+    # Add drone path
+    fig.add_trace(go.Scatter(x=[1, 4], y=[1, 1], mode="lines+markers",
+                            line=dict(color="red", dash="dash"), name="Drone Path"))
+    
     # Update layout
     fig.update_layout(
-        title='Home Layout & Drone Path',
-        showlegend=True,
-        width=800,
-        height=600,
-        plot_bgcolor='white',
-        paper_bgcolor='white',
-        xaxis=dict(
-            showgrid=False,
-            zeroline=False,
-            range=[-5, 105]
-        ),
-        yaxis=dict(
-            showgrid=False,
-            zeroline=False,
-            range=[-5, 85],
-            scaleanchor='x',
-            scaleratio=1
-        )
+        showlegend=False,
+        xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+        yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+        width=600,
+        height=300,
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
     )
-
-    col1, col2 = st.columns(2)
     
-    with col1:
-        st.subheader("Request Medication Pickup")
-        with st.form("drone_request"):
-            pickup_location = st.text_input("Pharmacy Address")
-            delivery_location = st.text_input("Delivery Address", 
-                st.session_state.personal_info.get('address', ''))
-            medication_details = st.text_area("Medication Details")
-            
-            if st.form_submit_button("Request Drone"):
-                if pickup_location and delivery_location:
-                    st.session_state.drone_status = 'In Transit'
-                    st.success("Drone dispatched! Estimated delivery time: 30 minutes")
-                    st.rerun()
+    st.plotly_chart(fig)
     
-    with col2:
-        st.subheader("Live Drone Tracking")
-        st.plotly_chart(fig, use_container_width=True)
-        
-        if st.session_state.drone_status == 'In Transit':
-            # Simulate drone progress
-            progress = st.progress(0)
-            status_text = st.empty()
-            
-            if st.button("Simulate Delivery"):
-                for i in range(100):
-                    progress.progress(i + 1)
-                    if i < 33:
-                        status_text.text("🚁 Drone en route to pharmacy...")
-                    elif i < 66:
-                        status_text.text("📦 Picking up medication...")
-                    else:
-                        status_text.text("🏠 Delivering to your location...")
-                st.session_state.drone_status = 'Available'
-                st.success("✅ Delivery completed!")
-                st.rerun()
+    # Drone Controls
+    st.markdown("### 🎮 Drone Controls")
+    
+    if st.session_state.drone_status == 'Available':
+        if st.button("Start Delivery", use_container_width=True):
+            st.session_state.drone_status = 'In Transit'
+            st.session_state.drone_location = 'In Transit to Bedroom'
+            st.success("Drone is delivering medications from Kitchen to Bedroom!")
+            st.experimental_rerun()
+    else:
+        if st.button("Reset Drone", use_container_width=True):
+            st.session_state.drone_status = 'Available'
+            st.session_state.drone_location = 'Kitchen'
+            st.info("Drone has been reset and is ready for the next delivery.")
+            st.experimental_rerun()

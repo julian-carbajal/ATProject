@@ -9,5 +9,4 @@ streamlit-calendar==1.1.0
 matplotlib==3.8.2
 streamlit-extras==0.4.0
 hydralit_components==1.0.10
-streamlit-echarts==0.4.0
 streamlit-card==1.0.0
