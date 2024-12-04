@@ -361,6 +361,10 @@ elif selected == "Analytics":
             df_doses['date'] = pd.to_datetime(df_doses['date'])
             df_filtered = df_doses[df_doses['date'].dt.date > date_filter]
             
+            # Ensure hour column exists
+            if 'hour' not in df_filtered.columns and 'time' in df_filtered.columns:
+                df_filtered['hour'] = df_filtered['time'].str.split(':').str[0].astype(int)
+            
             # Analytics Sections
             tab1, tab2 = st.tabs(["Adherence Analytics", "Medication Insights"])
             
@@ -395,23 +399,30 @@ elif selected == "Analytics":
                     
                     # Time of Day Analysis
                     st.markdown("### ⏰ Time of Day Analysis")
-                    hourly_doses = df_filtered[df_filtered['status'] == 'Taken'].groupby('hour').size()
-                    
-                    fig_time = go.Figure(data=[
-                        go.Bar(
-                            x=hourly_doses.index,
-                            y=hourly_doses.values,
-                            marker_color='#3498db'
-                        )
-                    ])
-                    fig_time.update_layout(
-                        title='Preferred Medication Times',
-                        xaxis_title='Hour of Day',
-                        yaxis_title='Number of Doses',
-                        paper_bgcolor='rgba(0,0,0,0)',
-                        plot_bgcolor='rgba(0,0,0,0)',
-                    )
-                    st.plotly_chart(fig_time, use_container_width=True)
+                    if 'hour' in df_filtered.columns:
+                        taken_doses = df_filtered[df_filtered['status'] == 'Taken']
+                        if not taken_doses.empty:
+                            hourly_doses = taken_doses.groupby('hour').size()
+                            
+                            fig_time = go.Figure(data=[
+                                go.Bar(
+                                    x=hourly_doses.index,
+                                    y=hourly_doses.values,
+                                    marker_color='#3498db'
+                                )
+                            ])
+                            fig_time.update_layout(
+                                title='Preferred Medication Times',
+                                xaxis_title='Hour of Day',
+                                yaxis_title='Number of Doses',
+                                paper_bgcolor='rgba(0,0,0,0)',
+                                plot_bgcolor='rgba(0,0,0,0)',
+                            )
+                            st.plotly_chart(fig_time, use_container_width=True)
+                        else:
+                            st.info("No taken doses recorded yet.")
+                    else:
+                        st.warning("Time information is not available for analysis.")
             
             with tab2:
                 if not df_filtered.empty:
@@ -420,28 +431,31 @@ elif selected == "Analytics":
                     
                     # Medication adherence comparison
                     med_adherence = df_filtered.groupby('medication')['status'].value_counts().unstack(fill_value=0)
-                    med_adherence_pct = med_adherence.div(med_adherence.sum(axis=1), axis=0) * 100
-                    
-                    fig_med = go.Figure()
-                    for status in ['Taken', 'Delayed', 'Missed']:
-                        if status in med_adherence_pct.columns:
-                            fig_med.add_trace(go.Bar(
-                                name=status,
-                                x=med_adherence_pct.index,
-                                y=med_adherence_pct[status],
-                                marker_color='#2ecc71' if status == 'Taken' 
-                                           else '#f1c40f' if status == 'Delayed' 
-                                           else '#e74c3c'
-                            ))
-                    
-                    fig_med.update_layout(
-                        barmode='stack',
-                        title='Medication-wise Adherence',
-                        yaxis_title='Percentage',
-                        paper_bgcolor='rgba(0,0,0,0)',
-                        plot_bgcolor='rgba(0,0,0,0)',
-                    )
-                    st.plotly_chart(fig_med, use_container_width=True)
+                    if not med_adherence.empty:
+                        med_adherence_pct = med_adherence.div(med_adherence.sum(axis=1), axis=0) * 100
+                        
+                        fig_med = go.Figure()
+                        for status in ['Taken', 'Delayed', 'Missed']:
+                            if status in med_adherence_pct.columns:
+                                fig_med.add_trace(go.Bar(
+                                    name=status,
+                                    x=med_adherence_pct.index,
+                                    y=med_adherence_pct[status],
+                                    marker_color='#2ecc71' if status == 'Taken' 
+                                               else '#f1c40f' if status == 'Delayed' 
+                                               else '#e74c3c'
+                                ))
+                        
+                        fig_med.update_layout(
+                            barmode='stack',
+                            title='Medication-wise Adherence',
+                            yaxis_title='Percentage',
+                            paper_bgcolor='rgba(0,0,0,0)',
+                            plot_bgcolor='rgba(0,0,0,0)',
+                        )
+                        st.plotly_chart(fig_med, use_container_width=True)
+                    else:
+                        st.info("No medication adherence data available yet.")
         else:
             st.warning("Data format is incorrect. Please ensure medication logs contain date information.")
     else:
