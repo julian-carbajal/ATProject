@@ -178,120 +178,93 @@
     outline: none;
 }
 
-/* Status Cards */
-.status-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    max-width: 800px;
-    margin: 0 auto 30px auto;
-}
-
-.status-card {
-    background: linear-gradient(135deg, #6c5ce7, #a363d9);
-    border-radius: 10px;
-    padding: 20px;
-    color: white;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s;
-}
-
-.status-card:hover {
-    transform: translateY(-2px);
-}
-
-.status-card h3 {
-    margin-bottom: 10px;
-    font-size: 1.1em;
-}
-
-.status-text {
-    font-size: 1.2em;
-    font-weight: bold;
-}
-
 /* House Layout */
 .house-layout {
     max-width: 800px;
-    margin: 0 auto;
-    background: #f8f9fa;
+    margin: 30px auto;
+    background: #ffffff;
     border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
 .floor {
-    background: white;
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
-    border: 2px solid #dee2e6;
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    border: 1px solid #e9ecef;
 }
 
 .floor h3 {
     text-align: center;
     color: #2c3e50;
-    margin-bottom: 20px;
-    font-size: 1.2em;
-    font-weight: bold;
+    margin-bottom: 25px;
+    font-size: 1.3em;
+    font-weight: 600;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e9ecef;
 }
 
 .rooms {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    gap: 25px;
+    padding: 10px;
 }
 
 .room {
-    background: #f8f9fa;
+    background: white;
     border: 1px solid #e9ecef;
-    border-radius: 8px;
-    padding: 20px;
+    border-radius: 10px;
+    padding: 25px 20px;
     text-align: center;
     position: relative;
-    min-height: 120px;
+    min-height: 140px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .room:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background: white;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .room h4 {
     color: #34495e;
-    margin-bottom: 15px;
-    font-size: 1em;
+    margin-bottom: 20px;
+    font-size: 1.1em;
     font-weight: 600;
 }
 
 .room-icon {
-    font-size: 2em;
+    font-size: 2.2em;
+    margin-top: 10px;
 }
 
 .stairs {
     text-align: center;
-    padding: 15px;
+    padding: 20px;
     background: #e9ecef;
-    border-radius: 8px;
-    margin: 20px 0;
+    border-radius: 10px;
+    margin: 30px 0;
     transition: all 0.3s;
+    border: 1px solid #dee2e6;
 }
 
 .stairs:hover {
     background: #dee2e6;
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .stairs-icon {
-    font-size: 2em;
-    animation: bounce 1s infinite;
+    font-size: 2.2em;
+    animation: bounce 1.5s infinite;
 }
 
 .drone {
@@ -299,7 +272,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 1.8em;
+    font-size: 2em;
     z-index: 10;
     transition: all 0.5s;
 }
@@ -308,16 +281,51 @@
     animation: fly 2s infinite;
 }
 
+/* Status Cards */
+.status-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    max-width: 800px;
+    margin: 0 auto 35px auto;
+}
+
+.status-card {
+    background: linear-gradient(135deg, #6c5ce7, #a363d9);
+    border-radius: 12px;
+    padding: 25px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.2);
+    transition: transform 0.3s;
+}
+
+.status-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(108, 92, 231, 0.3);
+}
+
+.status-card h3 {
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    opacity: 0.9;
+}
+
+.status-text {
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
 /* Animations */
 @keyframes bounce {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
+    50% { transform: translateY(-8px); }
 }
 
 @keyframes fly {
     0% { transform: translate(-50%, -50%) rotate(0deg); }
-    25% { transform: translate(-50%, -55%) rotate(5deg); }
-    75% { transform: translate(-50%, -45%) rotate(-5deg); }
+    25% { transform: translate(-50%, -58%) rotate(5deg); }
+    75% { transform: translate(-50%, -42%) rotate(-5deg); }
     100% { transform: translate(-50%, -50%) rotate(0deg); }
 }
 
@@ -325,36 +333,65 @@
 @media (max-width: 768px) {
     .rooms {
         grid-template-columns: 1fr;
+        gap: 20px;
     }
     
     .status-container {
         grid-template-columns: 1fr;
+        gap: 20px;
     }
     
     .room {
-        min-height: 100px;
+        min-height: 120px;
+        padding: 20px;
+    }
+    
+    .house-layout {
+        padding: 20px;
+        margin: 20px;
     }
 }
 
 /* Button Styling */
 .stButton > button {
-    background: linear-gradient(135deg, #6c5ce7, #a363d9);
+    background: linear-gradient(145deg, #3498db, #2980b9);
     color: white;
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    font-weight: bold;
-    transition: all 0.3s;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    width: 100%;
 }
 
 .stButton > button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
 }
 
-/* Progress Bar Customization */
+/* Progress Bar */
 .stProgress > div > div {
-    background-color: #6c5ce7;
+    background-color: #3498db;
+}
+
+/* Success Message */
+.stSuccess {
+    background: linear-gradient(145deg, #2ecc71, #27ae60);
+    color: white;
+    border-radius: 10px;
+    padding: 16px;
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 /* Path Container */
@@ -410,47 +447,5 @@
     }
     100% {
         transform: translateX(400px) rotate(0deg);
-    }
-}
-
-/* Button Styling */
-.stButton > button {
-    background: linear-gradient(145deg, #3498db, #2980b9);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 10px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    width: 100%;
-}
-
-.stButton > button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
-}
-
-/* Progress Bar */
-.stProgress > div > div {
-    background-color: #3498db;
-}
-
-/* Success Message */
-.stSuccess {
-    background: linear-gradient(145deg, #2ecc71, #27ae60);
-    color: white;
-    border-radius: 10px;
-    padding: 16px;
-    animation: slideIn 0.5s ease-out;
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateY(-20px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
     }
 }
