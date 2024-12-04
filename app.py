@@ -571,7 +571,7 @@ elif selected == "Schedule":
 elif selected == "Drone Service":
     st.title("🚁 Medication Delivery Drone")
     
-    # Current Status Section with better styling
+    # Status Cards
     st.markdown("""
         <div class='status-container'>
             <div class='status-card'>
@@ -583,68 +583,62 @@ elif selected == "Drone Service":
                 <p class='status-text'>Kitchen</p>
             </div>
         </div>
-    """, unsafe_allow_html=True)
-    
-    # House Layout Section
-    st.markdown("### 🏠 House Layout")
-    
-    # Create a detailed house layout with multiple rooms and levels
-    st.markdown("""
-        <div class='house-container'>
+        
+        <div class='house-layout'>
             <!-- Second Floor -->
-            <div class='floor second-floor'>
-                <h4>Second Floor</h4>
-                <div class='floor-layout'>
-                    <div class='room master-bedroom'>
-                        <h5>Master Bedroom</h5>
-                        <span class='room-icon'>🛏️</span>
+            <div class='floor'>
+                <h3>Second Floor</h3>
+                <div class='rooms'>
+                    <div class='room'>
+                        <h4>Master Bedroom</h4>
+                        <div class='room-icon'>🛏️</div>
                     </div>
-                    <div class='room bedroom-2'>
-                        <h5>Bedroom 2</h5>
-                        <span class='room-icon'>🛏️</span>
+                    <div class='room'>
+                        <h4>Bedroom 2</h4>
+                        <div class='room-icon'>🛏️</div>
                     </div>
-                    <div class='room bedroom-3'>
-                        <h5>Bedroom 3</h5>
-                        <span class='room-icon'>🛏️</span>
+                    <div class='room'>
+                        <h4>Bedroom 3</h4>
+                        <div class='room-icon'>🛏️</div>
                     </div>
-                    <div class='room bathroom-2'>
-                        <h5>Bathroom</h5>
-                        <span class='room-icon'>🚽</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- First Floor -->
-            <div class='floor first-floor'>
-                <h4>First Floor</h4>
-                <div class='floor-layout'>
-                    <div class='room living-room'>
-                        <h5>Living Room</h5>
-                        <span class='room-icon'>🛋️</span>
-                    </div>
-                    <div class='room kitchen'>
-                        <h5>Kitchen</h5>
-                        <span class='room-icon'>🍳</span>
-                        <div class='drone' id='drone'>🚁</div>
-                    </div>
-                    <div class='room dining-room'>
-                        <h5>Dining Room</h5>
-                        <span class='room-icon'>🍽️</span>
-                    </div>
-                    <div class='room bathroom-1'>
-                        <h5>Bathroom</h5>
-                        <span class='room-icon'>🚽</span>
+                    <div class='room'>
+                        <h4>Bathroom</h4>
+                        <div class='room-icon'>🚽</div>
                     </div>
                 </div>
             </div>
             
             <!-- Stairs -->
             <div class='stairs'>
-                <span class='stairs-icon'>↗️</span>
+                <div class='stairs-icon'>↗️</div>
+            </div>
+            
+            <!-- First Floor -->
+            <div class='floor'>
+                <h3>First Floor</h3>
+                <div class='rooms'>
+                    <div class='room'>
+                        <h4>Living Room</h4>
+                        <div class='room-icon'>🛋️</div>
+                    </div>
+                    <div class='room'>
+                        <h4>Kitchen</h4>
+                        <div class='room-icon'>🍳</div>
+                        <div class='drone'>🚁</div>
+                    </div>
+                    <div class='room'>
+                        <h4>Dining Room</h4>
+                        <div class='room-icon'>🍽️</div>
+                    </div>
+                    <div class='room'>
+                        <h4>Bathroom</h4>
+                        <div class='room-icon'>🚽</div>
+                    </div>
+                </div>
             </div>
         </div>
     """, unsafe_allow_html=True)
-    
+
     # Drone Controls
     st.markdown("### 🎮 Drone Controls")
     
